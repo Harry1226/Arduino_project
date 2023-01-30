@@ -1,0 +1,60 @@
+#include <Stepper.h>  // ライブラリのインクルード
+ 
+#define PIN1 3  // 青
+#define PIN2 4  // ピンク
+#define PIN3 5  // 黄
+#define PIN4 6  // オレンジ
+#define BUTTON_PIN 7
+#define LED_PIN 10
+ 
+// ステッピングモーター(出力軸)が1回転するのに必要なステップ数
+#define STEP 2048
+ 
+Stepper stepper1(STEP, PIN1, PIN3, PIN2, PIN4); 
+
+void setup() {
+ //モータの設定
+  stepper1.setSpeed(15);  // 1分間当たりの回転数を設定(rpm)
+  pinMode(PIN1, OUTPUT);    // デジタルピンを出力に設定
+  pinMode(PIN2, OUTPUT);
+  pinMode(PIN3, OUTPUT);
+  pinMode(PIN4, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  
+}
+ 
+void loop()
+{
+  int count = 0;
+  int value;
+
+  while(count < 4)
+  {
+    value = digitalRead(BUTTON_PIN);
+    if(value == LOW)
+    {
+        stepper1.step(409.6);    // 45°回転させる(256ステップ)
+        digitalWrite(PIN1, LOW);  
+        digitalWrite(PIN2, LOW); 
+        digitalWrite(PIN3, LOW); 
+        digitalWrite(PIN4, LOW);     
+        count ++;
+    }
+  }
+
+  int DUTY = 120;
+    
+    for(int i = 0; i < 5; ++i)
+    {
+      analogWrite(LED_PIN, DUTY);
+      delay(1000);
+      analogWrite(LED_PIN, 0);
+      delay(1000);
+    }
+    
+    value = digitalRead(BUTTON_PIN);
+
+    count = 0;
+}
+
+
